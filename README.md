@@ -17,7 +17,8 @@ Honestly? This project was just for fun. 😄 But also because we hate rounding 
 
 ---
 
-## How It Works 🚀  
+## How It Works 🚀 
+Python integers have infinity precision, so why not use them to represent floating-point numbers with perfect accuracy? That's exactly what this class does!
 The class represents a number with:  
 - **`number` (int):** The base integer value.  
 - **`exponent_shift` (int):** The power of 10 by which the base is scaled.  
