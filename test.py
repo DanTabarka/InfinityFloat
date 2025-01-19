@@ -78,117 +78,94 @@ class Test(unittest.TestCase):
         """Testing 'add' methon."""
 
         # small
-        float1 = InfinityFLoat(314, -2)
-        float2 = InfinityFLoat(2, 0)
-        result = float1.add(float2)
-        self.assertEqual(result, InfinityFLoat(514, -2))
-
-
-        # small = InfinityFLoat(5, -2)
-        # big = InfinityFLoat(3, 2)
-
-        # another = small.add(big)
-        # print(another)
-
-        # small = InfinityFLoat(5, 5)
-        # big = InfinityFLoat(123456, 10)
-
-        # another = small.add(big)
-        # print(another)
-        # # + - adding
-        # small = InfinityFLoat(-120, 0)
-        # big = InfinityFLoat(-12, 1)
-
-        # another = small.add(big)
-        # print(another)     export PATH="/opt/homebrew/bin:/usr/bin/python3"
-
-        # small = InfinityFLoat(-120, 0)
-        # big = InfinityFLoat(12, 1)
-
-        # another = small.add(big)
-        # print(another)
-
-
-        # small
         float1 = InfinityFLoat(500, -2) # 5
         float2 = InfinityFLoat(300, -2) # 3
-        result = float1.add(float2)
+        result = float1 + float2
         self.assertEqual(str(result), "8")
 
-        float1 = InfinityFLoat(314, -2) # 3.14
-        float2 = InfinityFLoat(2, 0)    # 2
-        result = float1.add(float2)
+        float1.set(314, -2) # 3.14
+        float2.set(2, 0)    # 2
+        result = float1 + float2
         self.assertEqual(str(result), "5.14")
-        float1 = InfinityFLoat(314, -2) # 3.14
-        float2 = InfinityFLoat(2, -1)   # 0.2
-        result = float1.add(float2)
+        float1.set(314, -2) # 3.14
+        float2.set(2, -1)   # 0.2
+        result = float1 + float2
         self.assertEqual(str(result), "3.34")
-        float1 = InfinityFLoat(314, -2) # 3,14
-        float2 = InfinityFLoat(2, -2)   # 0.02
-        result = float1.add(float2)
+        float1.set(314, -2) # 3,14
+        float2.set(2, -2)   # 0.02
+        result = float1 + float2
         self.assertEqual(str(result), "3.16")
-        float1 = InfinityFLoat(314, -2) # 3.14
-        float2 = InfinityFLoat(2, -3)   # 0.002
-        result = float1.add(float2)
+        float1.set(314, -2) # 3.14
+        float2.set(2, -3)   # 0.002
+        result = float1 + float2
         self.assertEqual(str(result), "3.142")
 
         # zero
-        float1 = InfinityFLoat(123, 0)  # 123
-        float2 = InfinityFLoat(0, 0)    # 0
-        result = float1.add(float2)
+        float1.set(123, 0)  # 123
+        float2.set(0, 0)    # 0
+        result = float1 + float2
         self.assertEqual(str(result), "123")
-        float1 = InfinityFLoat(0, 0)    # 0
-        float2 = InfinityFLoat(123, 0)  # 123
-        result = float1.add(float2)
+        float1.set(0, 0)    # 0
+        float2.set(123, 0)  # 123
+        result = float1 + float2
         self.assertEqual(str(result), "123")
 
         # negative
-        float1 = InfinityFLoat(500, -2) # 5
-        float2 = InfinityFLoat(-300, -2) # -3
-        result = float1.add(float2)
+        float1.set(500, -2) # 5
+        float2.set(-300, -2) # -3
+        result = float1 + float2
         self.assertEqual(str(result), "2")
 
-        float1 = InfinityFLoat(-500, -2)    # -5
-        float2 = InfinityFLoat(-300, -2)    # -3
-        result = float1.add(float2)
+        float1.set(-500, -2)    # -5
+        float2.set(-300, -2)    # -3
+        result = float1 + float2
         self.assertEqual(str(result), "-8")
 
         # opposite sign
-        float1 = InfinityFLoat(1000, -1)  # 100
-        float2 = InfinityFLoat(-1000, -1)  # -100
-        result = float1.add(float2)
+        float1.set(1000, -1)  # 100
+        float2.set(-1000, -1)  # -100
+        result = float1 + float2
         self.assertEqual(str(result), "0")
 
         # large exponent
-        float1 = InfinityFLoat(1, 10)  # 10000000000
-        float2 = InfinityFLoat(5, 5)   # 500000
-        result = float1.add(float2)
+        float1.set(1, 10)  # 10000000000
+        float2.set(5, 5)   # 500000
+        result = float1 + float2
         self.assertEqual(str(result), "10000500000")
 
         # very small
-        float1 = InfinityFLoat(1, -10)  # 0.0000000001
-        float2 = InfinityFLoat(1, -10)  # 0.0000000001
-        result = float1.add(float2)
+        float1.set(1, -10)  # 0.0000000001
+        float2.set(1, -10)  # 0.0000000001
+        result = float1 + float2
         self.assertEqual(str(result), "0.0000000002")
 
         # large and small
-        float1 = InfinityFLoat(1, 5)    # 100000
-        float2 = InfinityFLoat(1, -10)  # 0.0000000001
-        result = float1.add(float2)
+        float1.set(1, 5)    # 100000
+        float2.set(1, -10)  # 0.0000000001
+        result = float1 + float2
         self.assertEqual(str(result), "100000.0000000001")
 
-        float1 = InfinityFLoat(1_000_000_000, 20)
-        float2 = InfinityFLoat(1, -20)
-        result = float1.add(float2)
+        float1.set(1_000_000_000, 20)
+        float2.set(1, -20)
+        result = float1 + float2
         self.assertEqual(str(result), "1" + "0"*29 + ".00000000000000000001")
 
-        float1 = InfinityFLoat(1, 100)
-        float2 = InfinityFLoat(1, -20)
-        result = float1.add(float2)
+        float1.set(1, 100)
+        float2.set(1, -20)
+        result = float1 + float2
         self.assertEqual(str(result), "1" + "0"*100 + ".00000000000000000001")
         
 
+    def test_sub(self):
+        pass
 
+
+    def test_mul(self):
+        pass
+
+
+    def test_div(self):
+        pass
         
 
 
