@@ -14,9 +14,13 @@ class InfinityFLoat:
         exponent_shift (int): The power of 10 by which the base value is scaled.
                               For example, 314 with an exponent_shift of -2
                               represents the number 3.14 (314 * 10^(-2)).
+        sign           (int): -1 or 1
+        digit_count    (int): digit count of number
+        digit_limit    (int): limit of digits (precission)
     """
-    def __init__(self, number = 0, exponent_shift = 0):
+    def __init__(self, number = 0, exponent_shift = 0, digit_limit = 1000):
         self.set(number, exponent_shift)
+        self.digit_limit = digit_limit
     
     def set(self, number: int, exponent_shift: int) -> None:
         self.base_form(number, exponent_shift)
@@ -29,6 +33,7 @@ class InfinityFLoat:
             exponent_shift += 1
         self.number = num
         self.exp = exponent_shift
+        self.digit_count = self.calculate_digit_count(num)
     
     def add(self, other: 'InfinityFLoat') -> 'InfinityFLoat':
         min_exp = min(self.exp, other.exp)
@@ -46,7 +51,7 @@ class InfinityFLoat:
         pass
     
     # helper funcions __________________________________________________________________________
-    def digit_count(self, number: int) -> int:
+    def calculate_digit_count(self, number: int) -> int:
         count = 0
         num = abs(number)
         while num > 0:
@@ -54,32 +59,34 @@ class InfinityFLoat:
             num //= 10
         return count
     
-    def set_exponent(self, exp: int) -> None:
+    def set_exponent(self, exp: int) -> None:   # only works with lowering exponent like 12*10^5 => 12_000*10^2
         dif = self.exp - exp
         self.exp = exp
         self.number *= 10**dif
     
+    def get_string(self) -> str:
+        return f'{self.number*self.sign} * 10^{self.exp} => {str(self)}'
+
+    
     # magic methonds ___________________________________________________________________________
     def __str__(self):
+        if self.number == 0:
+            return "0"
+        
         sign = "-" if self.sign == -1 else ""
         if self.exp >= 0:
-            return f'{sign}{self.number} * 10^{self.exp} => {sign}{self.number * 10**(self.exp)}'
+            return f'{sign}{self.number * 10**(self.exp)}'
         
         exp = -self.exp
         integral_part = self.number // (10**exp)
         decimal_part = self.number - (integral_part * (10**exp))
-        zeros = "0"*(exp - self.digit_count(decimal_part))
+        zeros = "0"*(exp - self.calculate_digit_count(decimal_part))
 
-        return f'{sign}{self.number} * 10^{self.exp} => {sign}{integral_part}.{zeros}{decimal_part}'
+        return f'{sign}{integral_part}.{zeros}{decimal_part}'
     
     def __eq__(self, other: 'InfinityFLoat') -> bool:
         """Compare two objects according to their normalized values."""
         if not isinstance(other, InfinityFLoat):
             return False
-        # Normalizace exponentů
-        # common_exp = min(self.exp, other.exp)
-        # self_value = self.number * (10 ** (self.exp - common_exp)) * self.sign
-        # other_value = other.number * (10 ** (other.exp - common_exp)) * other.sign
-        # return self_value == other_value
-        return self.number*self.sign == other.number*other.sign and self.exp == other.exp
+        return self.exp == other.exp and self.number*self.sign == other.number*other.sign
 
