@@ -22,10 +22,7 @@ class InfinityFLoat:
         self.base_form(number, exponent_shift)
     
     def base_form(self, number: int, exponent_shift: int) -> None:
-        if number >= 0:
-            self.sign = 1
-        else:
-            self.sign = -1
+        self.sign = 1 if number >= 0 else -1
         num = abs(number)
         while num % 10 == 0 and num > 0:
             num //= 10
@@ -73,49 +70,16 @@ class InfinityFLoat:
         decimal_part = self.number - (integral_part * (10**exp))
         zeros = "0"*(exp - self.digit_count(decimal_part))
 
-        return f'{sign}{self.number} * 10^{self.exp} => {sign}{integral_part},{zeros}{decimal_part}'
+        return f'{sign}{self.number} * 10^{self.exp} => {sign}{integral_part}.{zeros}{decimal_part}'
+    
+    def __eq__(self, other: 'InfinityFLoat') -> bool:
+        """Compare two objects according to their normalized values."""
+        if not isinstance(other, InfinityFLoat):
+            return False
+        # Normalizace exponentů
+        # common_exp = min(self.exp, other.exp)
+        # self_value = self.number * (10 ** (self.exp - common_exp)) * self.sign
+        # other_value = other.number * (10 ** (other.exp - common_exp)) * other.sign
+        # return self_value == other_value
+        return self.number*self.sign == other.number*other.sign and self.exp == other.exp
 
-
-# fl = InfinityFLoat(5, -2)
-# print(fl)
-# fl = InfinityFLoat(5, -1)
-# print(fl)
-# fl = InfinityFLoat(5, 0)
-# print(fl)
-# fl = InfinityFLoat(123456, -3)
-# print(fl)
-# fl = InfinityFLoat(123000456, -3)
-# print(fl)
-# fl = InfinityFLoat(123000456, -6)
-# print(fl)
-# fl = InfinityFLoat(123000456, -4)
-# print(fl)
-# fl = InfinityFLoat(-123000456, -4)
-# print(fl)
-
-# print("__add testing__")
-
-# small = InfinityFLoat(5, -2)
-# big = InfinityFLoat(3, 2)
-
-# another = small.add(big)
-# print(another)
-
-# small = InfinityFLoat(5, 5)
-# big = InfinityFLoat(123456, 10)
-
-# another = small.add(big)
-# print(another)
-
-# # + - adding
-# small = InfinityFLoat(-120, 0)
-# big = InfinityFLoat(-12, 1)
-
-# another = small.add(big)
-# print(another)
-
-# small = InfinityFLoat(-120, 0)
-# big = InfinityFLoat(12, 1)
-
-# another = small.add(big)
-# print(another)
