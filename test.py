@@ -80,84 +80,135 @@ class Test(unittest.TestCase):
         # small
         float1 = InfinityFLoat(500, -2) # 5
         float2 = InfinityFLoat(300, -2) # 3
-        result = float1 + float2
-        self.assertEqual(str(result), "8")
+        self.assertEqual(str(float1 + float2), "8")
 
         float1.set(314, -2) # 3.14
         float2.set(2, 0)    # 2
-        result = float1 + float2
-        self.assertEqual(str(result), "5.14")
-        float1.set(314, -2) # 3.14
+        self.assertEqual(str(float1 + float2), "5.14")
         float2.set(2, -1)   # 0.2
-        result = float1 + float2
-        self.assertEqual(str(result), "3.34")
-        float1.set(314, -2) # 3,14
+        self.assertEqual(str(float1 + float2), "3.34")
         float2.set(2, -2)   # 0.02
-        result = float1 + float2
-        self.assertEqual(str(result), "3.16")
-        float1.set(314, -2) # 3.14
+        self.assertEqual(str(float1 + float2), "3.16")
         float2.set(2, -3)   # 0.002
-        result = float1 + float2
-        self.assertEqual(str(result), "3.142")
+        self.assertEqual(str(float1 + float2), "3.142")
+        float2.set(2, -4)   # 0.0002
+        self.assertEqual(str(float1 + float2), "3.1402")
+        float2.set(2, -5)   # 0.00002
+        self.assertEqual(str(float1 + float2), "3.14002")
+        float2.set(2, -6)   # 0.000002
+        self.assertEqual(str(float1 + float2), "3.140002")
 
         # zero
         float1.set(123, 0)  # 123
         float2.set(0, 0)    # 0
-        result = float1 + float2
-        self.assertEqual(str(result), "123")
-        float1.set(0, 0)    # 0
-        float2.set(123, 0)  # 123
-        result = float1 + float2
-        self.assertEqual(str(result), "123")
+        self.assertEqual(str(float1 + float2), "123")
+        self.assertEqual(str(float2 + float1), "123")
+        self.assertEqual(str(float2 + float2), "0")
+        self.assertEqual(str(float1 + float1), "246")
 
         # negative
         float1.set(500, -2) # 5
         float2.set(-300, -2) # -3
-        result = float1 + float2
-        self.assertEqual(str(result), "2")
-
-        float1.set(-500, -2)    # -5
-        float2.set(-300, -2)    # -3
-        result = float1 + float2
-        self.assertEqual(str(result), "-8")
+        self.assertEqual(str(float1 + float2), "2")
+        self.assertEqual(str(float2 + float1), "2")
 
         # opposite sign
         float1.set(1000, -1)  # 100
         float2.set(-1000, -1)  # -100
-        result = float1 + float2
-        self.assertEqual(str(result), "0")
+        self.assertEqual(str(float1 + float2), "0")
+        self.assertEqual(str(float2 + float1), "0")
 
         # large exponent
         float1.set(1, 10)  # 10000000000
         float2.set(5, 5)   # 500000
-        result = float1 + float2
-        self.assertEqual(str(result), "10000500000")
+        self.assertEqual(str(float1 + float2), "10000500000")
 
         # very small
         float1.set(1, -10)  # 0.0000000001
         float2.set(1, -10)  # 0.0000000001
-        result = float1 + float2
-        self.assertEqual(str(result), "0.0000000002")
+        self.assertEqual(str(float1 + float2), "0.0000000002")
 
         # large and small
         float1.set(1, 5)    # 100000
         float2.set(1, -10)  # 0.0000000001
-        result = float1 + float2
-        self.assertEqual(str(result), "100000.0000000001")
+        self.assertEqual(str(float1 + float2), "100000.0000000001")
 
         float1.set(1_000_000_000, 20)
         float2.set(1, -20)
-        result = float1 + float2
-        self.assertEqual(str(result), "1" + "0"*29 + ".00000000000000000001")
+        self.assertEqual(str(float1 + float2), "1" + "0"*29 + ".00000000000000000001")
 
         float1.set(1, 100)
         float2.set(1, -20)
-        result = float1 + float2
-        self.assertEqual(str(result), "1" + "0"*100 + ".00000000000000000001")
+        self.assertEqual(str(float1 + float2), "1" + "0"*100 + ".00000000000000000001")
         
 
     def test_sub(self):
-        pass
+        """Testing 'sub' methon."""
+
+        # small
+        float1 = InfinityFLoat(500, -2) # 5
+        float2 = InfinityFLoat(300, -2) # 3
+        self.assertEqual(str(float1 - float2), "2")
+
+        float1.set(314, -2) # 3.14
+        float2.set(2, 0)    # 2
+        self.assertEqual(str(float1 - float2), "1.14")
+        float2.set(2, -1)   # 0.2
+        self.assertEqual(str(float1 - float2), "2.94")
+        float2.set(2, -2)   # 0.02
+        self.assertEqual(str(float1 - float2), "3.12")
+        float2.set(2, -3)   # 0.002
+        self.assertEqual(str(float1 - float2), "3.138")
+        float2.set(2, -4)   # 0.0002
+        self.assertEqual(str(float1 - float2), "3.1398")
+        float2.set(2, -5)   # 0.00002
+        self.assertEqual(str(float1 - float2), "3.13998")
+        float2.set(2, -6)   # 0.000002
+        self.assertEqual(str(float1 - float2), "3.139998")
+
+        # zero
+        float1.set(123, 0)  # 123
+        float2.set(0, 0)    # 0
+        self.assertEqual(str(float1 - float2), "123")
+        self.assertEqual(str(float2 - float1), "-123")
+        self.assertEqual(str(float2 - float2), "0")
+        self.assertEqual(str(float1 - float1), "0")
+
+        # negative
+        float1.set(500, -2) # 5
+        float2.set(-300, -2) # -3
+        self.assertEqual(str(float1 - float2), "8")
+        self.assertEqual(str(float2 - float1), "-8")
+
+        # opposite sign
+        float1.set(1000, -1)  # 100
+        float2.set(-1000, -1)  # -100
+        self.assertEqual(str(float1 - float2), "200")
+        self.assertEqual(str(float2 - float1), "-200")
+
+        # large exponent
+        float1.set(1, 10)  # 10000000000
+        float2.set(5, 5)   # 500000
+        self.assertEqual(str(float1 - float2), "9999500000")
+        self.assertEqual(str(float2 - float1), "-9999500000")
+
+        # very small
+        float1.set(1, -10)  # 0.0000000001
+        float2.set(1, -10)  # 0.0000000001
+        self.assertEqual(str(float1 - float2), "0")
+
+        # large and small
+        float1.set(1, 5)    # 100000
+        float2.set(1, -10)  # 0.0000000001
+        self.assertEqual(str(float1 - float2), "99999.9999999999")
+
+        float1.set(1_000_000_000, 20)
+        float2.set(1, -20)
+        self.assertEqual(str(float1 - float2), "9"*29 + ".99999999999999999999")
+
+        float1.set(1, 100)
+        float2.set(1, -20)
+        self.assertEqual(str(float1 - float2), "9"*100 + ".99999999999999999999")
 
 
     def test_mul(self):
@@ -165,7 +216,9 @@ class Test(unittest.TestCase):
 
 
     def test_div(self):
-        pass
+        float1 = InfinityFLoat(10, 0)
+        zero = InfinityFLoat(0, 0)
+        self.assertRaises(ValueError, float1.div, zero) 
         
 
 

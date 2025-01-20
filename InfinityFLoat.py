@@ -43,13 +43,15 @@ class InfinityFLoat:
         return InfinityFLoat(integral_part, min_exp)
 
     def sub(self, other: 'InfinityFLoat') -> 'InfinityFLoat':
-        copy = InfinityFLoat(-1 * other.sign*other.number, other.exp)
+        copy = InfinityFLoat(-1 * other.sign*other.number, other.exp)       # TODO: make this more efficient
         return self.add(copy)
 
     def mul(self, other: 'InfinityFLoat') -> 'InfinityFLoat':
         pass
     def div(self, other: 'InfinityFLoat') -> 'InfinityFLoat':
-        pass
+        if other.number == 0:
+            raise ValueError("Can not divide by zero")
+        return other.number
 
     # helper funcions __________________________________________________________________________
     def calculate_digit_count(self, number: int) -> int:
