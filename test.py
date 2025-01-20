@@ -81,6 +81,8 @@ class Test(unittest.TestCase):
         float1 = InfinityFLoat(500, -2) # 5
         float2 = InfinityFLoat(300, -2) # 3
         self.assertEqual(str(float1 + float2), "8")
+        self.assertEqual(float1, InfinityFLoat(500, -2))
+        self.assertEqual(float2, InfinityFLoat(300, -2))
 
         float1.set(314, -2) # 3.14
         float2.set(2, 0)    # 2
@@ -97,6 +99,8 @@ class Test(unittest.TestCase):
         self.assertEqual(str(float1 + float2), "3.14002")
         float2.set(2, -6)   # 0.000002
         self.assertEqual(str(float1 + float2), "3.140002")
+        self.assertEqual(float1, InfinityFLoat(314, -2))
+        self.assertEqual(float2, InfinityFLoat(2, -6))
 
         # zero
         float1.set(123, 0)  # 123

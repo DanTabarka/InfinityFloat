@@ -35,11 +35,13 @@ class InfinityFLoat:
         self.digit_count = self.calculate_digit_count(num)
 
     def add(self, other: 'InfinityFLoat') -> 'InfinityFLoat':
-        min_exp = min(self.exp, other.exp)
-        self.set_exponent(min_exp)
-        other.set_exponent(min_exp)
+        copy_other = InfinityFLoat(other.sign*other.number, other.exp)       # TODO: make this more efficient
+        copy_self = InfinityFLoat(self.sign*self.number, self.exp)          # TODO: make this more efficient
+        min_exp = min(copy_self.exp, copy_other.exp)
+        copy_self.set_exponent(min_exp)
+        copy_other.set_exponent(min_exp)
 
-        integral_part = self.number*self.sign + other.number*other.sign
+        integral_part = copy_self.number*copy_self.sign + copy_other.number*copy_other.sign
         return InfinityFLoat(integral_part, min_exp)
 
     def sub(self, other: 'InfinityFLoat') -> 'InfinityFLoat':
@@ -54,7 +56,24 @@ class InfinityFLoat:
     def div(self, other: 'InfinityFLoat') -> 'InfinityFLoat':
         if other.number == 0:
             raise ValueError("Can not divide by zero")
-        return other.number
+        
+        copy_other = InfinityFLoat(other.sign*other.number, other.exp)       # TODO: make this more efficient
+        copy_self = InfinityFLoat(self.sign*self.number, self.exp)          # TODO: make this more efficient
+        exp = min(copy_self.exp, copy_other.exp)
+        copy_self.set_exponent(exp)
+        copy_other.set_exponent(exp)
+
+        integral_part = copy_self.number // copy_other.number
+        remain = copy_self.number - integral_part*copy_other.number
+        digit_counter = self.calculate_digit_count(integral_part)
+        while remain > 0 and digit_counter < self.digit_limit:
+            digit_counter += 1
+            next_digit = (remain * 10) // copy_other.number
+            integral_part = (integral_part * 10) + next_digit
+            remain = (remain * 10) - next_digit * copy_other.number
+            exp -= 1
+
+        return InfinityFLoat(integral_part, exp)
 
     # helper funcions __________________________________________________________________________
     def calculate_digit_count(self, number: int) -> int:
@@ -66,7 +85,7 @@ class InfinityFLoat:
         return count
 
     def set_exponent(self, exp: int) -> None:   # only works with lowering exponent like 12*10^5 => 12_000*10^2
-        dif = self.exp - exp
+        dif = self.exp - exp                    # !!!damage the number!!!, it will not be in the base form
         self.exp = exp
         self.number *= 10**dif
 
@@ -108,3 +127,7 @@ class InfinityFLoat:
         if not isinstance(other, InfinityFLoat):
             return False
         return self.exp == other.exp and self.number*self.sign == other.number*other.sign
+
+f1 = InfinityFLoat(10, 0)
+f2 = InfinityFLoat(3, 0)
+print(f1.div(f2))
