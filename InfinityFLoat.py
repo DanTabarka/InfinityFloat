@@ -47,7 +47,10 @@ class InfinityFLoat:
         return self.add(copy)
 
     def mul(self, other: 'InfinityFLoat') -> 'InfinityFLoat':
-        pass
+        integral_part = self.number * other.number
+        exp = self.exp + other.exp
+        return InfinityFLoat(integral_part, exp)
+
     def div(self, other: 'InfinityFLoat') -> 'InfinityFLoat':
         if other.number == 0:
             raise ValueError("Can not divide by zero")
@@ -95,6 +98,11 @@ class InfinityFLoat:
         if not isinstance(other, InfinityFLoat):
             raise TypeError("Operand must be an instance of InfinityFLoat")
         return self.sub(other)
+
+    def __mul__(self, other: 'InfinityFLoat') -> 'InfinityFLoat':
+        if not isinstance(other, InfinityFLoat):
+            raise TypeError("Operand must be an instance of InfinityFLoat")
+        return self.mul(other)
 
     def __eq__(self, other: 'InfinityFLoat') -> bool:
         if not isinstance(other, InfinityFLoat):
