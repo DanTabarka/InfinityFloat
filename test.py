@@ -216,15 +216,143 @@ class Test(unittest.TestCase):
 
 
     def test_mul(self):
-        pass
+        """Testing 'mul' methon."""
+
+        # small numbers
+        float1 = InfinityFLoat(5, 0)  # 5
+        float2 = InfinityFLoat(3, 0)  # 3
+        self.assertEqual(str(float1 * float2), "15")
+        self.assertEqual(str(float2 * float1), "15")
+
+        float1.set(314, -2)  # 3.14
+        float2.set(2, 0)     # 2
+        self.assertEqual(str(float1 * float2), "6.28")
+        float2.set(2, -1)    # 0.2
+        self.assertEqual(str(float1 * float2), "0.628")
+        float2.set(2, -2)    # 0.02
+        self.assertEqual(str(float1 * float2), "0.0628")
+        float2.set(2, -3)    # 0.002
+        self.assertEqual(str(float1 * float2), "0.00628")
+
+        # zero
+        float1.set(123, 0)  # 123
+        float2.set(0, 0)    # 0
+        self.assertEqual(str(float1 * float2), "0")
+        self.assertEqual(str(float2 * float1), "0")
+        self.assertEqual(str(float2 * float2), "0")
+        self.assertEqual(str(float1 * float1), str(123*123))
+
+        # negative numbers
+        float1.set(500, -2)  # 5
+        float2.set(-300, -2) # -3
+        self.assertEqual(str(float1 * float2), "-15")
+        self.assertEqual(str(float2 * float1), "-15")
+
+        # opposite sign
+        float1.set(1000, -1)  # 100
+        float2.set(-1000, -1)  # -100
+        self.assertEqual(str(float1 * float2), "-10000")
+        self.assertEqual(str(float2 * float1), "-10000")
+
+        # large exponent
+        float1.set(1, 10)  # 10000000000
+        float2.set(5, 5)   # 500000
+        self.assertEqual(str(float1 * float2), "5000000000000000")
+
+        # very small
+        float1.set(1, -10)  # 0.0000000001
+        float2.set(1, -10)  # 0.0000000001
+        self.assertEqual(str(float1 * float2), "0.00000000000000000001")
+
+        # large and small
+        float1.set(1, 5)    # 100000
+        float2.set(1, -10)  # 0.0000000001
+        self.assertEqual(str(float1 * float2), "0.00001")
+
+        float1.set(1_000_000_000, 20)
+        float2.set(1, -20)
+        self.assertEqual(str(float1 * float2), "1000000000")
+
+        float1.set(1, 100)
+        float2.set(1, -20)
+        self.assertEqual(str(float1 * float2), "1" + "0" * 80)
 
 
     def test_div(self):
+        """Testing 'div' methon.""" 
+        
+        # basic division
+        float1 = InfinityFLoat(10, 0)  # 10
+        float2 = InfinityFLoat(2, 0)   # 2
+        self.assertEqual(str(float1 / float2), "5")
+
+        float1.set(12345, 0)  # 12345
+        float2.set(1, 0)      # 1
+        self.assertEqual(str(float1 / float2), "12345")
+        self.assertEqual(str(float1 / float1), "1")
+
+        # fraction
+        float1.set(3, 0)  # 3
+        float2.set(2, 0)  # 2
+        self.assertEqual(str(float1 / float2), "1.5")
+
+        float1.set(49, 0)  # 49
+        float2.set(8, 0)  # 8
+        self.assertEqual(str(float1 / float2), "6.125")
+        
+        float1.set(9, 0)  # 9
+        float2.set(16, 0)  # 16
+        self.assertEqual(str(float1 / float2), "0.5625")
+        float2.set(32, 0)  # 32
+        self.assertEqual(str(float1 / float2), "0.28125")
+        float2.set(64, 0)  # 64
+        self.assertEqual(str(float1 / float2), "0.140625")
+
+        float1.set(1, 3)  # 1000
+        float2.set(3, 2)  # 300
+        self.assertEqual(str(float1 / float2), "3." + "3" * (float1.digit_limit - 1))
+
+        float1.set(5, 3)  # 5000
+        float2.set(3, 0)  # 3
+        self.assertEqual(str(float1 / float2), "1666." + "6" * (float1.digit_limit - 4))
+
+
+        # large and small exponent
+        float1.set(1, 10)  # 10000000000
+        float2.set(1, 5)   # 100000
+        self.assertEqual(str(float1 / float2), "100000")
+
+        float1.set(1, -5)  # 0.00001
+        float2.set(1, -10) # 0.0000000001
+        self.assertEqual(str(float1 / float2), "100000")
+
+        # negative numbers
+        float1.set(-10, 0)  # -10
+        float2.set(2, 0)    # 2
+        self.assertEqual(str(float1 / float2), "-5")
+
+        float1.set(10, 0)   # 10
+        float2.set(-2, 0)   # -2
+        self.assertEqual(str(float1 / float2), "-5")
+
+        # small number
+        float1.set(1, -10)  # 0.0000000001
+        float2.set(1, 0)    # 1
+        self.assertEqual(str(float1 / float2), "0.0000000001")
+
+        # large number
+        float1.set(1, 20)  # 100000000000000000000
+        float2.set(1, 0)   # 1
+        self.assertEqual(str(float1 / float2), "100000000000000000000")
+
+        # zero
         float1 = InfinityFLoat(10, 0)
         zero = InfinityFLoat(0, 0)
-        self.assertRaises(ValueError, float1.div, zero) 
-        
+        self.assertRaises(ValueError, float1.div, zero)
+        self.assertRaises(ValueError, zero.div, zero)
 
+        float2.set(10, 0) # 10
+        self.assertEqual(str(zero / float2), "0")
 
 if __name__ == "__main__":
     unittest.main()

@@ -49,7 +49,7 @@ class InfinityFLoat:
         return self.add(copy)
 
     def mul(self, other: 'InfinityFLoat') -> 'InfinityFLoat':
-        integral_part = self.number * other.number
+        integral_part = self.sign * self.number * other.number * other.sign
         exp = self.exp + other.exp
         return InfinityFLoat(integral_part, exp)
 
@@ -66,6 +66,7 @@ class InfinityFLoat:
         integral_part = copy_self.number // copy_other.number
         remain = copy_self.number - integral_part*copy_other.number
         digit_counter = self.calculate_digit_count(integral_part)
+        exp = 0
         while remain > 0 and digit_counter < self.digit_limit:
             digit_counter += 1
             next_digit = (remain * 10) // copy_other.number
@@ -73,7 +74,7 @@ class InfinityFLoat:
             remain = (remain * 10) - next_digit * copy_other.number
             exp -= 1
 
-        return InfinityFLoat(integral_part, exp)
+        return InfinityFLoat(integral_part * copy_self.sign * copy_other.sign, exp)
 
     # helper funcions __________________________________________________________________________
     def calculate_digit_count(self, number: int) -> int:
@@ -122,12 +123,20 @@ class InfinityFLoat:
         if not isinstance(other, InfinityFLoat):
             raise TypeError("Operand must be an instance of InfinityFLoat")
         return self.mul(other)
+    
+    def __truediv__(self, other: 'InfinityFLoat') -> 'InfinityFLoat':
+        if not isinstance(other, InfinityFLoat):
+            raise TypeError("Operand must be an instance of InfinityFLoat")
+        return self.div(other)
+    
+    # __floordiv__(self, other): Celočíselné dělení (//).
+    # __mod__(self, other): Zbytek po dělení (%).
+    # __pow__(self, other[, modulo]): Umocnění (**).
+    # __abs__(self): Absolutní hodnota (abs(a)).
 
     def __eq__(self, other: 'InfinityFLoat') -> bool:
         if not isinstance(other, InfinityFLoat):
             return False
         return self.exp == other.exp and self.number*self.sign == other.number*other.sign
 
-f1 = InfinityFLoat(10, 0)
-f2 = InfinityFLoat(3, 0)
-print(f1.div(f2))
+
