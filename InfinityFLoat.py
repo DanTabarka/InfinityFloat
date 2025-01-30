@@ -8,9 +8,9 @@ class InfinityFLoat:
     a power of ten. It enables precise arithmetic and representation of
     numbers in the form `number * 10^(exponent_shift)`.
 
-    Args:
+    Atributes:
         number         (int): The base integer value of the number.
-        exponent_shift (int): The power of 10 by which the base value is scaled.
+        exp            (int): The power of 10 by which the base value is scaled.
                               For example, 314 with an exponent_shift of -2
                               represents the number 3.14 (314 * 10^(-2)).
         sign           (int): -1 or 1
@@ -18,11 +18,12 @@ class InfinityFLoat:
         digit_limit    (int): limit of digits (precission)
     """
     def __init__(self, number=0, exponent_shift=0, digit_limit=1000):
-        self.set(number, exponent_shift)
         self.digit_limit = digit_limit
+        self.set(number, exponent_shift)
 
     def set(self, number: int, exponent_shift: int) -> None:
         self.base_form(number, exponent_shift)
+        self.cut_number()
 
     def base_form(self, number: int, exponent_shift: int) -> None:
         self.sign = 1 if number >= 0 else -1
@@ -33,30 +34,51 @@ class InfinityFLoat:
         self.number = num
         self.exp = exponent_shift
         self.digit_count = self.calculate_digit_count(num)
+    
+    def cut_number(self) -> None:
+        if self.digit_count > self.digit_limit:
+            diference = self.digit_count - self.digit_limit
+            self.exp += diference
+            self.number //= 10**diference
+            self.digit_count = self.digit_limit
 
     def add(self, other: 'InfinityFLoat') -> 'InfinityFLoat':
-        copy_other = InfinityFLoat(other.sign*other.number, other.exp)       # TODO: make this more efficient
-        copy_self = InfinityFLoat(self.sign*self.number, self.exp)          # TODO: make this more efficient
+        max_digit_limit = max(self.digit_limit, other.digit_limit)
+        copy_other = InfinityFLoat(other.sign*other.number, other.exp, max_digit_limit)       # TODO: make this more efficient
+        copy_self = InfinityFLoat(self.sign*self.number, self.exp, max_digit_limit)          # TODO: make this more efficient
         min_exp = min(copy_self.exp, copy_other.exp)
         copy_self.set_exponent(min_exp)
         copy_other.set_exponent(min_exp)
 
+        digit_count_self = self.calculate_digit_count(copy_self.number)
+        digit_count_other = self.calculate_digit_count(copy_other.number)
+        to_lower_exp = max(digit_count_other, digit_count_self) - max_digit_limit      # to calculate if shift is needed
+        if to_lower_exp > 0:    
+            copy_self.exp += to_lower_exp
+            copy_self.number //= 10**to_lower_exp
+            copy_other.exp += to_lower_exp
+            copy_other.number //= 10**to_lower_exp
+            min_exp += to_lower_exp
+
         integral_part = copy_self.number*copy_self.sign + copy_other.number*copy_other.sign
-        return InfinityFLoat(integral_part, min_exp)
+        return InfinityFLoat(integral_part, min_exp, max_digit_limit)                       # TODO: make min_digit_limit more efficient
 
     def sub(self, other: 'InfinityFLoat') -> 'InfinityFLoat':
-        copy = InfinityFLoat(-1 * other.sign*other.number, other.exp)       # TODO: make this more efficient
+        max_digit_limit = max(self.digit_limit, other.digit_limit)
+        copy = InfinityFLoat(-1 * other.sign*other.number, other.exp, max_digit_limit)       # TODO: make this more efficient
         return self.add(copy)
 
     def mul(self, other: 'InfinityFLoat') -> 'InfinityFLoat':
+        max_digit_limit = max(self.digit_limit, other.digit_limit)
         integral_part = self.sign * self.number * other.number * other.sign
         exp = self.exp + other.exp
-        return InfinityFLoat(integral_part, exp)
+        return InfinityFLoat(integral_part, exp, max_digit_limit)
 
     def div(self, other: 'InfinityFLoat') -> 'InfinityFLoat':
         if other.number == 0:
             raise ValueError("Can not divide by zero")
         
+        max_digit_limit = max(self.digit_limit, other.digit_limit)
         copy_other = InfinityFLoat(other.sign*other.number, other.exp)       # TODO: make this more efficient
         copy_self = InfinityFLoat(self.sign*self.number, self.exp)          # TODO: make this more efficient
         exp = min(copy_self.exp, copy_other.exp)
@@ -74,7 +96,7 @@ class InfinityFLoat:
             remain = (remain * 10) - next_digit * copy_other.number
             exp -= 1
 
-        return InfinityFLoat(integral_part * copy_self.sign * copy_other.sign, exp)
+        return InfinityFLoat(integral_part * copy_self.sign * copy_other.sign, exp, max_digit_limit)
 
     # helper funcions __________________________________________________________________________
     def calculate_digit_count(self, number: int) -> int:

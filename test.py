@@ -354,5 +354,59 @@ class Test(unittest.TestCase):
         float2.set(10, 0) # 10
         self.assertEqual(str(zero / float2), "0")
 
+
+    def test_digit_count(self):
+        num = InfinityFLoat(123456789, 0, 3)
+        self.assertEqual(str(num), "123000000")
+        self.assertEqual(num.digit_count, 3)
+        self.assertEqual(num.number, 123)
+
+        num.set(123000000, -6)
+        self.assertEqual(str(num), "123")
+
+        # add
+        num1 = InfinityFLoat(123000000, 0, 3)
+        num2 = InfinityFLoat(123, 0, 3)
+        self.assertEqual(str(num1 + num2), "123000000")
+
+        num1.digit_limit = 6
+        num2.digit_limit = 6
+        self.assertEqual(str(num1 + num2), "123000000")
+        num1.digit_limit = 7
+        num2.digit_limit = 7
+        self.assertEqual(str(num1 + num2), "123000100")
+        num1.digit_limit = 8
+        num2.digit_limit = 8
+        self.assertEqual(str(num1 + num2), "123000120")
+        num1.digit_limit = 9
+        num2.digit_limit = 9
+        self.assertEqual(str(num1 + num2), "123000123")
+        num1.digit_limit = 10
+        num2.digit_limit = 10
+        self.assertEqual(str(num1 + num2), "123000123")
+
+        # sub
+        num1 = InfinityFLoat(123000000, 0, 3)
+        num2 = InfinityFLoat(123, 0, 3)
+        self.assertEqual(str(num1 - num2), "123000000")
+
+        num1.digit_limit = 6
+        num2.digit_limit = 6
+        self.assertEqual(str(num1 - num2), "123000000")
+        num1.digit_limit = 7
+        num2.digit_limit = 7
+        self.assertEqual(str(num1 - num2), "122999900")
+        num1.digit_limit = 8
+        num2.digit_limit = 8
+        self.assertEqual(str(num1 - num2), "122999880")
+        num1.digit_limit = 9
+        num2.digit_limit = 9
+        self.assertEqual(str(num1 - num2), "122999877")
+        num1.digit_limit = 10
+        num2.digit_limit = 10
+        self.assertEqual(str(num1 - num2), "122999877")
+
+
+
 if __name__ == "__main__":
     unittest.main()
